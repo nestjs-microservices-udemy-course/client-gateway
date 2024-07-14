@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { prettyTarget } from './utils/pretty.target';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { prettyTarget } from './utils/pretty.target';
         transport: { target: prettyTarget },
       },
     }),
+    ProductsModule,
   ],
 })
 export class AppModule {}
