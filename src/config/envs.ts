@@ -5,6 +5,8 @@ interface EnvVars {
   PORT: number;
   PRODUCTS_MICROSERVICE_HOST: string;
   PRODUCTS_MICROSERVICE_PORT: number;
+  ORDER_MICROSERVICE_HOST: string;
+  ORDER_MICROSERVICE_PORT: number;
 }
 
 const envsSchema = joi
@@ -12,6 +14,8 @@ const envsSchema = joi
     PORT: joi.number().default(3000),
     PRODUCTS_MICROSERVICE_HOST: joi.string().required(),
     PRODUCTS_MICROSERVICE_PORT: joi.number().required(),
+    ORDER_MICROSERVICE_HOST: joi.string().required(),
+    ORDER_MICROSERVICE_PORT: joi.number().required(),
   })
   .unknown(true);
 
