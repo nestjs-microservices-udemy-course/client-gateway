@@ -1,8 +1,23 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
+import { PaginationDto } from 'src/common/dto';
+import { PRODUCTS_SERVICE } from 'src/config/services';
 
 @Controller('products')
 export class ProductsController {
-  constructor() {}
+  constructor(
+    @Inject(PRODUCTS_SERVICE) private readonly productsClient: ClientProxy,
+  ) {}
 
   @Post()
   createProduct() {
@@ -10,22 +25,32 @@ export class ProductsController {
   }
 
   @Get()
-  getAllProducts() {
-    return 'This action returns all products';
+  getAllProducts(@Query() paginationDto: PaginationDto) {
+    return this.productsClient.send(
+      { cmd: 'find_all_products' },
+      paginationDto,
+    );
   }
 
   @Get(':id')
-  getProduct() {
-    return 'This action returns a product';
+  async getProduct(@Param('id') id: string) {
+    try {
+      return await firstValueFrom(
+        this.productsClient.send({ cmd: 'find_product' }, { id }),
+      );
+    } catch (error) {
+      console.debug(error);
+      throw new RpcException(error);
+    }
   }
 
   @Patch(':id')
-  updateProduct() {
-    return 'This action updates a product';
+  updateProduct(@Param('id') id: string) {
+    return 'This action updates a product ' + id;
   }
 
   @Delete(':id')
-  removeProduct() {
-    return 'This action removes a product';
+  removeProduct(@Param('id') id: string) {
+    return 'This action removes a product ' + id;
   }
 }
