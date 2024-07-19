@@ -8,6 +8,8 @@ import { RpxCustomExceptionFilter } from './common/exceptions/rpc-custom-excepti
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  console.debug('Hola mundo!!');
+
   app.setGlobalPrefix('api');
 
   const logger = app.get(PinoLogger);
